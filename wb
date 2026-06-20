@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Automated Reporting Workbook</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .report {
+            margin-top: 20px;
+            background: #eef;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Automated Reporting Workbook</h1>
+
+    <input type="text" id="category" placeholder="Category">
+    <input type="number" id="sales" placeholder="Sales Amount">
+    <button onclick="addData()">Add Data</button>
+
+    <table id="dataTable">
+        <tr>
+            <th>Category</th>
+            <th>Sales</th>
+        </tr>
+    </table>
+
+    <button onclick="generateReport()">Generate Report</button>
+
+    <div class="report" id="report"></div>
+</div>
+
+<script>
+    let salesData = [];
+
+    function addData() {
+        let category = document.getElementById("category").value;
+        let sales = parseFloat(document.getElementById("sales").value);
+
+        if (category === "" || isNaN(sales)) {
+            alert("Please enter valid data");
+            return;
+        }
+
+        salesData.push({ category, sales });
+
+        let table = document.getElementById("dataTable");
+        let row = table.insertRow();
+        row.insertCell(0).innerText = category;
+        row.insertCell(1).innerText = sales;
+
+        document.getElementById("category").value = "";
+        document.getElementById("sales").value = "";
+    }
+
+    function generateReport() {
+        if (salesData.length === 0) {
+            alert("No data available");
+            return;
+        }
+
+        let total = salesData.reduce((sum, item) => sum + item.sales, 0);
+        let average = total / salesData.length;
+
+        let highest = salesData.reduce((a, b) =>
+            a.sales > b.sales ? a : b
+        );
+
+        document.getElementById("report").innerHTML = `
+            <h3>Report Summary</h3>
+            <p><b>Total Sales:</b> ₹${total.toFixed(2)}</p>
+            <p><b>Average Sales:</b> ₹${average.toFixed(2)}</p>
+            <p><b>Top Category:</b> ${highest.category}</p>
+            <p><b>Highest Sale:</b> ₹${highest.sales.toFixed(2)}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>
